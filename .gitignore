@@ -1,0 +1,10 @@
+/ansible_vagrant/roles/andrelohmann*
+/ansible_vagrant/custom_vars.yml
+/.idea
+/nbproject
+/.vagrant
+.DS_Store
+*.retry
+*.log
+/config.yml*
+!/config.yml.example

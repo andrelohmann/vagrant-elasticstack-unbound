@@ -1,0 +1,23 @@
+---
+
+- name: install python passlib
+  apt:
+    name: "{{item}}"
+    state: latest
+    dpkg_options: 'force-confnew,force-confdef'
+    autoremove: yes
+    update_cache: yes
+  with_items:
+  - python-passlib
+
+- name: create basic auth user
+  htpasswd:
+    path: /etc/apache2/.htpasswd
+    name: "{{ item.user }}"
+    password: "{{ item.password }}"
+    owner: root
+    group: www-data
+    mode: 0640
+  with_items: "{{ htpasswd_users }}"
+
+...

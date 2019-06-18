@@ -1,0 +1,34 @@
+---
+
+- name: install required packages
+  apt:
+    name: "{{ required_packages }}"
+    state: latest
+    dpkg_options: 'force-confnew,force-confdef'
+    autoclean: yes
+    autoremove: yes
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: install required python packages
+  pip:
+    name: "{{ required_python_packages }}"
+    extra_args: --upgrade
+    executable: pip3
+
+- name: copy ssh_config /home/vagrant/.ssh/config
+  copy:
+    src: ssh_config
+    dest: /home/vagrant/.ssh/config
+    owner: vagrant
+    group: vagrant
+    mode: 0644
+
+- name: Create a 2048-bit SSH key for user vagrant in /home/vagrant/.ssh/id_rsa
+  user:
+    name: vagrant
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+
+...

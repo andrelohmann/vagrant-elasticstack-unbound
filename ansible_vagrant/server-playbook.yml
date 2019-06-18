@@ -1,0 +1,31 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+
+  vars:
+    required_packages:
+    - git
+    - tcptraceroute
+    - nmap
+    - jq
+    - python3-pip
+    required_python_packages: []
+
+  pre_tasks:
+  - name: check for file custom_vars.yml
+    stat:
+      path: custom_vars.yml
+    register: stat_custom_vars
+  - name: load custom vars, if existent
+    include_vars:
+      file: custom_vars.yml
+    when: stat_custom_vars.stat.exists
+
+  roles:
+  - andrelohmann.root_colored_prompt
+  - default_tasks
+  - andrelohmann.elasticstack
+
+
+...
