@@ -1,0 +1,19 @@
+---
+
+# Elastic Search
+elasticsearch_heap_size: 2g
+elasticsearch_network_host: "192.168.213.213"
+elasticsearch_listen_ip: "192.168.213.213"
+elasticsearch_kibana_listen_ip: "192.168.213.213"
+elasticsearch_kibana_listen_port: "5601"
+elasticsearch_kibana_elasticsearch_hosts: '["http://192.168.213.213:9200"]'
+
+elasticsearch_release: 7.1.1 # 6.4.1; 6.3.2
+
+elasticsearch_install_auditbeat: True
+elasticsearch_install_filebeat: True
+elasticsearch_install_heartbeat: True
+elasticsearch_install_metricbeat: True
+elasticsearch_install_packetbeat: True
+
+...
