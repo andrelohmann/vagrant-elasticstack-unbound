@@ -2,11 +2,11 @@
 x=0
 y=3
 for i in $(cat /opt/domains); do
-  #nmap -sn $i
-  ping -c 10 $i
+  nmap -sn $i
+  #ping -c 10 $i
   x=$((($x*1)%$y))
   if test $x = 0; then
-    #nmap -sn $i.fail
-    ping -c 10 $i.fail
+    nmap -sn $i.fail
+    #ping -c 10 $i.fail
   fi
 done
