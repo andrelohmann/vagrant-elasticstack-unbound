@@ -1,0 +1,39 @@
+---
+
+- name: copy domains /opt/domains
+  copy:
+    src: domains
+    dest: /opt/domains
+    owner: root
+    group: root
+    mode: 0644
+
+- name: copy dnstest command
+  copy:
+    src: "dnstest"
+    dest: "/usr/local/bin/dnstest"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: add dnstest systemd unit file
+  copy:
+    src: unitfile
+    dest: /etc/systemd/system/dnstest.service
+    mode: 0644
+
+- name: just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+
+- name: enable dnstest
+  systemd:
+    name: dnstest
+    enabled: yes
+
+- name: start dnstest
+  systemd:
+    name: dnstest
+    state: started
+
+...

@@ -1,0 +1,79 @@
+---
+
+- name: install unbound
+  apt:
+    name: "{{ packages }}"
+    state: latest
+    dpkg_options: 'force-confnew,force-confdef'
+    autoclean: yes
+    autoremove: yes
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+    - unbound
+    - namebench
+
+# touch log file
+- name: Create an insecure log file
+  file:
+    path: /var/log/unbound.log
+    state: touch
+    owner: unbound
+    group: unbound
+    mode: '0644'
+
+# Note: You can check config using unbound-checkconf
+- name: configure unbound (unbound.conf)
+  copy:
+    dest: /etc/unbound/unbound.conf
+    content: |
+      server:
+        #chroot: ""
+        access-control: 127.0.0.0/8 allow
+        access-control: 0.0.0.0/0 allow
+        verbosity: 3
+        logfile: /var/log/unbound.log
+        log-queries: yes
+      forward-zone:
+        name: "."
+        forward-addr: 1.0.0.1@53#one.one.one.one
+        forward-addr: 1.1.1.1@53#one.one.one.one
+        forward-addr: 8.8.4.4@53#dns.google
+        forward-addr: 8.8.8.8@53#dns.google
+        forward-addr: 9.9.9.9@53#dns.quad9.net
+        forward-addr: 149.112.112.112@53#dns.quad9.net
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: configure unbound (unbound.conf)
+  copy:
+    dest: /etc/logrotate.d/unbound
+    content: |
+      /var/log/unbound.log {
+        daily
+        rotate 3
+        maxsize 1G
+        missingok
+        notifempty
+        compress
+        sharedscripts
+        create 644 unbound unbound
+        postrotate
+        # /usr/sbin/unbound-control log_reopen
+        systemctl restart unbound
+        endscript
+      }
+
+- name: just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+
+- name: restart unbound
+  systemd:
+    name: "unbound"
+    state: restarted
+    enabled: yes
+
+...

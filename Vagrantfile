@@ -49,7 +49,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "client" do |c|
     #config.vm.box = "ubuntu/xenial64" # 16.04
-    c.vm.box = "ubuntu/bionic64" # 18.04
+    c.vm.box = "ubuntu/xenial64" # 16.04
     # set memory to 2048m
     c.vm.provider "virtualbox" do |vb|
       vb.memory = vagrant_config['client']['memory']

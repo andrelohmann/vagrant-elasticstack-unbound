@@ -21,11 +21,17 @@
     include_vars:
       file: custom_vars.yml
     when: stat_custom_vars.stat.exists
+  - name: exclude beats
+    set_fact:
+      elasticsearch_install_auditbeat: False
+      elasticsearch_install_heartbeat: False
 
   roles:
   - andrelohmann.root_colored_prompt
   - default_tasks
   - andrelohmann.beats
+  - unbound_tasks
+  - unbound_tests
 
 
 ...

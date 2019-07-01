@@ -1,4 +1,4 @@
-# vagrant-elasticstack - (c) Andre Lohmann (and others) 2019
+# vagrant-elasticstack-unbound - (c) Andre Lohmann (and others) 2019
 
 ## Maintainer Contact
  * Andre Lohmann
@@ -6,7 +6,7 @@
 
 ## content
 
-Vagrant template, to deploy an elasticstack (elasticsearch + kibana + beats) test stack.
+Vagrant template, to deploy an elasticstack (elasticsearch + kibana + beats) test stack together with an unbound machine, shipping logs to elasticsearch.
 
 ## Usage
 
