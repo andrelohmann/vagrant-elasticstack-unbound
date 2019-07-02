@@ -76,4 +76,17 @@
     state: restarted
     enabled: yes
 
+- name: enable logshipping in filebeat yaml
+  lineinfile:
+    path: /etc/filebeat/filebeat.yml
+    regexp: "^  enabled:"
+    line: "  enabled: true"
+    insertafter: '^  # Change to true to enable this input configuration.'
+
+- name: restart filebeat
+  systemd:
+    name: filebeat
+    enabled: yes
+    state: restarted
+
 ...
