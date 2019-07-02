@@ -1,0 +1,88 @@
+---
+
+- block:
+
+  - name: remove parameter -e, to achieve filelogging again
+    lineinfile:
+      path: /etc/systemd/system/multi-user.target.wants/auditbeat.service
+      regexp: "^Environment=\"BEAT_LOG_OPTS=-e\""
+      line: "Environment=\"BEAT_LOG_OPTS=\""
+    when: elasticsearch_listen_ip is defined
+
+  - name: restart auditbeat
+    systemd:
+      name: auditbeat
+      enabled: yes
+      state: restarted
+
+  when: elasticsearch_install_auditbeat|bool
+
+- block:
+
+  - name: remove parameter -e, to achieve filelogging again
+    lineinfile:
+      path: /etc/systemd/system/multi-user.target.wants/filebeat.service
+      regexp: "^Environment=\"BEAT_LOG_OPTS=-e\""
+      line: "Environment=\"BEAT_LOG_OPTS=\""
+    when: elasticsearch_listen_ip is defined
+
+  - name: restart filebeat
+    systemd:
+      name: filebeat
+      enabled: yes
+      state: restarted
+
+  when: elasticsearch_install_filebeat|bool
+
+- block:
+
+  - name: remove parameter -e, to achieve filelogging again
+    lineinfile:
+      path: /etc/systemd/system/multi-user.target.wants/heartbeat-elastic.service
+      regexp: "^Environment=\"BEAT_LOG_OPTS=-e\""
+      line: "Environment=\"BEAT_LOG_OPTS=\""
+    when: elasticsearch_listen_ip is defined
+
+  - name: restart heartbeat
+    systemd:
+      name: heartbeat-elastic
+      enabled: yes
+      state: restarted
+
+  when: elasticsearch_install_heartbeat|bool
+
+- block:
+
+  - name: remove parameter -e, to achieve filelogging again
+    lineinfile:
+      path: /etc/systemd/system/multi-user.target.wants/metricbeat.service
+      regexp: "^Environment=\"BEAT_LOG_OPTS=-e\""
+      line: "Environment=\"BEAT_LOG_OPTS=\""
+    when: elasticsearch_listen_ip is defined
+
+  - name: restart metricbeat
+    systemd:
+      name: metricbeat
+      enabled: yes
+      state: restarted
+
+  when: elasticsearch_install_metricbeat|bool
+
+- block:
+
+  - name: remove parameter -e, to achieve filelogging again
+    lineinfile:
+      path: /etc/systemd/system/multi-user.target.wants/packetbeat.service
+      regexp: "^Environment=\"BEAT_LOG_OPTS=-e\""
+      line: "Environment=\"BEAT_LOG_OPTS=\""
+    when: elasticsearch_listen_ip is defined
+
+  - name: restart packetbeat
+    systemd:
+      name: packetbeat
+      enabled: yes
+      state: restarted
+
+  when: elasticsearch_install_packetbeat|bool
+
+...

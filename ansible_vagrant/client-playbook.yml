@@ -30,6 +30,7 @@
   - andrelohmann.root_colored_prompt
   - default_tasks
   - andrelohmann.beats
+  - beats_patch
   - unbound_tasks
   - unbound_tests
 
