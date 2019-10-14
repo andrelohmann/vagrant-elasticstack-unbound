@@ -1,4 +1,6 @@
-# vagrant-elasticstack-unbound - (c) Andre Lohmann (and others) 2019
+# vagrant-elasticstack-unbound
+
+(c) Andre Lohmann (and others) 2019
 
 ## Maintainer Contact
  * Andre Lohmann
