@@ -11,6 +11,13 @@
     - jq
     - python3-pip
     required_python_packages: []
+    golang_version: '1.11'
+    golang_gopath: go
+    golang_additional_libraries:
+    - golang.org/x/tools/cmd/goimports
+    golang_users:
+    - root
+    - vagrant
 
   pre_tasks:
   - name: check for file custom_vars.yml
@@ -28,11 +35,13 @@
 
   roles:
   - andrelohmann.root_colored_prompt
+  - andrelohmann.golang
   - default_tasks
   - andrelohmann.beats
   - beats_patch
   - unbound_tasks
   - unbound_tests
+  - unbound_exporter
 
 
 ...

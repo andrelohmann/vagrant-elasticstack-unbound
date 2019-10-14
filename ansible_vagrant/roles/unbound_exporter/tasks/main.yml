@@ -1,0 +1,45 @@
+---
+
+- name: install unbound exporter
+  shell: "source $HOME/.profile; go get github.com/kumina/unbound_exporter"
+  args:
+    executable: /bin/bash
+
+- name: install unbound exporter
+  shell: "source $HOME/.profile; go install github.com/kumina/unbound_exporter"
+  args:
+    executable: /bin/bash
+
+- name: add unbound_exporter systemd unit file
+  copy:
+    src: unitfile
+    dest: /etc/systemd/system/unbound_exporter.service
+    mode: 0644
+
+- name: just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+
+- name: enable unbound_exporter
+  systemd:
+    name: unbound_exporter
+    enabled: yes
+
+- name: start unbound_exporter
+  systemd:
+    name: unbound_exporter
+    state: started
+
+- name: add prometheus metricbeat module
+  copy:
+    src: prometheus.yml
+    dest: /etc/metricbeat/modules.d/prometheus.yml
+    mode: 0644
+
+- name: restart metricbeat
+  systemd:
+    name: metricbeat
+    state: restarted
+
+
+...
