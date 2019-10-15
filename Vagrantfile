@@ -44,6 +44,7 @@ Vagrant.configure(2) do |config|
       ansible.install_mode = :default
       ansible.playbook = "ansible_vagrant/server-playbook.yml"
       ansible.galaxy_role_file = "ansible_vagrant/requirements.yml"
+      ansible.extra_vars = { ansible_python_interpreter:"/usr/bin/python3" }
     end
   end
 
@@ -73,6 +74,7 @@ Vagrant.configure(2) do |config|
       ansible.install_mode = :default
       ansible.playbook = "ansible_vagrant/client-playbook.yml"
       ansible.galaxy_role_file = "ansible_vagrant/requirements.yml"
+      ansible.extra_vars = { ansible_python_interpreter:"/usr/bin/python3" }
     end
   end
 end

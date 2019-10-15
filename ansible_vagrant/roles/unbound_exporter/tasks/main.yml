@@ -1,14 +1,33 @@
 ---
 
-- name: install unbound exporter
-  shell: "source $HOME/.profile; go get github.com/kumina/unbound_exporter"
+- name: copy dockerfile
+  copy:
+    src: Dockerfile
+    dest: /root/Dockerfile
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+
+- name: Build the image
+  docker_image:
+    build:
+      path: /root
+    name: unbound_exporter
+    source: build
+
+- name: extract unbound_exporter from image
+  shell: docker run --rm --entrypoint /bin/sh unbound_exporter -c "cat /go/bin/unbound_exporter" > /root/unbound_exporter
   args:
     executable: /bin/bash
 
-- name: install unbound exporter
-  shell: "source $HOME/.profile; go install github.com/kumina/unbound_exporter"
-  args:
-    executable: /bin/bash
+- name: copy unbound exporter to /usr/local/bin
+  copy:
+    src: /root/unbound_exporter
+    dest: /usr/local/bin/unbound_exporter
+    remote_src: yes
+    owner: root
+    group: root
+    mode: 0755
 
 - name: add unbound_exporter systemd unit file
   copy:

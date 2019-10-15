@@ -7,7 +7,7 @@ After=network.target
 Type=simple
 User=root
 Group=root
-ExecStart=/root/go/bin/unbound_exporter
+ExecStart=/usr/local/bin/unbound_exporter
 
 # Give the script some time to startup
 TimeoutSec=300
