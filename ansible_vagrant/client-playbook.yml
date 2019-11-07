@@ -7,7 +7,7 @@
     required_packages:
     - git
     - tcptraceroute
-    - nmap
+    - htop
     - jq
     - python3-pip
     required_python_packages: []
@@ -34,9 +34,12 @@
   - default_tasks
   - andrelohmann.beats
   - beats_patch
+  - unbound_build
   - unbound_tasks
   - unbound_tests
   - unbound_exporter
+  - nginx
+  - nginx_tests
 
 
 ...

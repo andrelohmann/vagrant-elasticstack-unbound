@@ -11,43 +11,34 @@
     cache_valid_time: 3600
   vars:
     packages:
-    - nmap
-    - namebench
+    - apache2-utils
 
-- name: copy domains /opt/domains
+- name: copy httptest command
   copy:
-    src: domains
-    dest: /opt/domains
-    owner: root
-    group: root
-    mode: 0644
-
-- name: copy dnstest command
-  copy:
-    src: "dnstest"
-    dest: "/usr/local/bin/dnstest"
+    src: "httptest"
+    dest: "/usr/local/bin/httptest"
     owner: root
     group: root
     mode: 0755
 
-- name: add dnstest systemd unit file
+- name: add httptest systemd unit file
   copy:
     src: unitfile
-    dest: /etc/systemd/system/dnstest.service
+    dest: /etc/systemd/system/httptest.service
     mode: 0644
 
 - name: just force systemd to reread configs
   systemd:
     daemon_reload: yes
 
-- name: enable dnstest
+- name: enable httptest
   systemd:
-    name: dnstest
+    name: httptest
     enabled: yes
 
-- name: start dnstest
+- name: start httptest
   systemd:
-    name: dnstest
+    name: httptest
     state: started
 
 ...

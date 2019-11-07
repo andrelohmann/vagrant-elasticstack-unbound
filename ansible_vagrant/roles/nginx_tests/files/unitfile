@@ -1,0 +1,16 @@
+[Unit]
+Description=HTTPTest daemon
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/local/bin/httptest
+
+# Give the script some time to startup
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,45 @@
+---
+
+- name: create unbound_package directory
+  file:
+    path: /root/unbound_package
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: copy build_unbound.sh
+  copy:
+    src: build_unbound.sh
+    dest: /root/unbound_package/build_unbound.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: copy dockerfile
+  copy:
+    src: Dockerfile
+    dest: /root/unbound_package/Dockerfile
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Build the image
+  docker_image:
+    build:
+      path: /root/unbound_package
+    name: unbound_package
+    source: build
+
+- name: extract unbound packages from image
+  shell: docker run --rm --entrypoint /bin/sh unbound_package -c "cat /build/build_source/unbound_1.9.4-packages.tar.xz" > /root/unbound_package/unbound_1.9.4-packages.tar.xz
+  args:
+    executable: /bin/bash
+
+- name: Extract unbound_1.9.4-packages.tar.xz
+  unarchive:
+    src: /root/unbound_package/unbound_1.9.4-packages.tar.xz
+    dest: /root/unbound_package
+    remote_src: yes
+
+...

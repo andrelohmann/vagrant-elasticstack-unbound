@@ -1,0 +1,13 @@
+#!/bin/bash
+x=5
+while true; do
+  for i in 1 2 3 4 5; do
+    ab -n100 -c 10 http://localhost:80/
+    sleep 5
+    #ping -c 10 $i
+    if test $i = $x; then
+      ab -n 100 -c 10 http://localhost:80/fail
+      sleep 5
+    fi
+  done
+done

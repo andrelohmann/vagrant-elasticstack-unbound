@@ -11,8 +11,24 @@
     cache_valid_time: 3600
   vars:
     packages:
-    - unbound
-    - namebench
+    - libfstrm0
+    - libprotobuf-c1
+    - xz-utils
+
+# dpkg -i libunbound8_1.9.4-al1_amd64.deb unbound-anchor_1.9.4-al1_amd64.deb unbound_1.9.4-al1_amd64.deb
+- name: install the compiled unbound packages
+  apt:
+    deb: "{{ item }}"
+    state: present
+    dpkg_options: 'force-confnew,force-confdef'
+    autoclean: yes
+    autoremove: yes
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+  - /root/unbound_package/libunbound8_1.9.4-al1_amd64.deb
+  - /root/unbound_package/unbound-anchor_1.9.4-al1_amd64.deb
+  - /root/unbound_package/unbound_1.9.4-al1_amd64.deb
 
 # touch log file
 - name: Create an insecure log file
@@ -35,6 +51,7 @@
         verbosity: 3
         logfile: /var/log/unbound.log
         log-queries: yes
+        extended-statistics: yes
       forward-zone:
         name: "."
         forward-addr: 1.0.0.1@53#one.one.one.one
@@ -43,11 +60,13 @@
         forward-addr: 8.8.8.8@53#dns.google
         forward-addr: 9.9.9.9@53#dns.quad9.net
         forward-addr: 149.112.112.112@53#dns.quad9.net
+      remote-control:
+        control-enable: yes
     owner: root
     group: root
     mode: '0644'
 
-- name: configure unbound (unbound.conf)
+- name: configure unbound logrotate
   copy:
     dest: /etc/logrotate.d/unbound
     content: |
@@ -65,6 +84,17 @@
         systemctl restart unbound
         endscript
       }
+
+- name: allow unbound.log read-write in apparmor
+  lineinfile:
+    path: /etc/apparmor.d/local/usr.sbin.unbound
+    regexp: "^/var/log/unbound.log rw,"
+    line: "/var/log/unbound.log rw,"
+
+- name: reload apparmor config
+  shell: apparmor_parser -r /etc/apparmor.d/usr.sbin.unbound
+  args:
+    executable: /bin/bash
 
 - name: just force systemd to reread configs
   systemd:

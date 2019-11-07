@@ -1,0 +1,63 @@
+---
+
+- name: install nginx
+  apt:
+    name: "{{ packages }}"
+    state: latest
+    dpkg_options: 'force-confnew,force-confdef'
+    autoclean: yes
+    autoremove: yes
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+    - nginx
+
+- name: copy stub_status
+  copy:
+    src: stub_status
+    dest: /etc/nginx/sites-available/stub_status
+    owner: root
+    group: root
+    mode: 0644
+
+- name: activate stub_status
+  file:
+    src: /etc/nginx/sites-available/stub_status
+    dest: /etc/nginx/sites-enabled/stub_status
+    owner: root
+    group: root
+    state: link
+
+- name: restart nginx
+  systemd:
+    name: nginx
+    state: restarted
+
+- name: add nginx filebeat module
+  copy:
+    src: filebeat.nginx.yml
+    dest: /etc/filebeat/modules.d/nginx.yml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: restart filebeat
+  systemd:
+    name: filebeat
+    state: restarted
+
+- name: add nginx metricbeat module
+  copy:
+    src: metricbeat.nginx.yml
+    dest: /etc/metricbeat/modules.d/nginx.yml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: restart metricbeat
+  systemd:
+    name: metricbeat
+    state: restarted
+
+...
