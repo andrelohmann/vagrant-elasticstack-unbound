@@ -8,7 +8,7 @@
 
 ## content
 
-Vagrant template, to deploy an elasticstack (elasticsearch + kibana + beats) test stack together with an unbound machine, shipping logs to elasticsearch.
+Vagrant template, to deploy an elasticstack (elasticsearch + kibana + beats) test stack together with an unbound + nginx machine, shipping logs to elasticsearch. Also, there is a mailhog (a demo mailserver) installed and configured, so you can use watchers to alert on email, when trial license is activated.
 
 ## Usage
 
@@ -44,4 +44,10 @@ Kibana will be listening on the server public ip on port 5601.
 
 ```
 http://SERVER.DOMAIN:5601
+```
+
+Mailhog will be listeing on plain http port 80.
+
+```
+http://SERVER.DOMAIN
 ```

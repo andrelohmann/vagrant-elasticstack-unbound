@@ -1,0 +1,30 @@
+---
+
+- block:
+
+  - name: configure mailhog
+    blockinfile:
+      path: /etc/elasticsearch/elasticsearch.yml
+      marker: "# {mark} activate email configuration xpack"
+      content: |
+        xpack.notification.email.account:
+          mailhog:
+            profile: mailhog
+            email_defaults:
+              from: <server@elastic.lokal>
+            smtp:
+                host: localhost
+                port: 25
+
+  - name: start elasticsearch
+    systemd:
+      name: "elasticsearch"
+      state: restarted
+      enabled: yes
+
+  - name: pause for one minute to allow elasticstack to come up
+    pause:
+      minutes: 1
+
+  when: elasticsearch_init_trial_license|bool
+...

@@ -11,6 +11,10 @@
     - jq
     - python3-pip
     required_python_packages: []
+    mailhog_smtp_port: 25
+    mailhog_web_port: 80
+    mailhog_path: /opt/mailhog
+    mailhog_release: v1.0.0
 
   pre_tasks:
   - name: check for file custom_vars.yml
@@ -25,7 +29,9 @@
   roles:
   - andrelohmann.root_colored_prompt
   - default_tasks
+  - andrelohmann.mailhog
   - andrelohmann.elasticstack
+  - mailhog_config
 
 
 ...

@@ -16,4 +16,6 @@ elasticsearch_install_heartbeat: True
 elasticsearch_install_metricbeat: True
 elasticsearch_install_packetbeat: True
 
+elasticsearch_init_trial_license: True # Should a 30 Day Trial license be initialized and XPack feature be installed
+
 ...
