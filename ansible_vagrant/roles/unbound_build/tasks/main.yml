@@ -32,13 +32,13 @@
     source: build
 
 - name: extract unbound packages from image
-  shell: docker run --rm --entrypoint /bin/sh unbound_package -c "cat /build/build_source/unbound_1.9.4-packages.tar.xz" > /root/unbound_package/unbound_1.9.4-packages.tar.xz
+  shell: docker run --rm --entrypoint /bin/sh unbound_package -c "cat /build/build_source/unbound_1.9.6-packages.tar.xz" > /root/unbound_package/unbound_1.9.6-packages.tar.xz
   args:
     executable: /bin/bash
 
-- name: Extract unbound_1.9.4-packages.tar.xz
+- name: Extract unbound_1.9.6-packages.tar.xz
   unarchive:
-    src: /root/unbound_package/unbound_1.9.4-packages.tar.xz
+    src: /root/unbound_package/unbound_1.9.6-packages.tar.xz
     dest: /root/unbound_package
     remote_src: yes
 

@@ -49,8 +49,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define "client" do |c|
-    #config.vm.box = "ubuntu/xenial64" # 16.04
-    c.vm.box = "ubuntu/xenial64" # 16.04
+    c.vm.box = "ubuntu/bionic64" # 18.04
     # set memory to 2048m
     c.vm.provider "virtualbox" do |vb|
       vb.memory = vagrant_config['client']['memory']
@@ -73,6 +72,36 @@ Vagrant.configure(2) do |config|
       ansible.install = true
       ansible.install_mode = :default
       ansible.playbook = "ansible_vagrant/client-playbook.yml"
+      ansible.galaxy_role_file = "ansible_vagrant/requirements.yml"
+      ansible.extra_vars = { ansible_python_interpreter:"/usr/bin/python3" }
+    end
+  end
+
+
+
+  config.vm.define "dhclient" do |d|
+    d.vm.box = "ubuntu/xenial64" # 16.04
+    # set memory to 2048m
+    d.vm.provider "virtualbox" do |vb|
+      vb.memory = vagrant_config['dhclient']['memory']
+      vb.cpus = vagrant_config['dhclient']['cpus']
+    end
+
+    d.vm.synced_folder ".", "/vagrant", disabled: true
+    d.vm.synced_folder "ansible_vagrant", "/vagrant/ansible_vagrant", create: true, owner: "vagrant", group: "vagrant", mount_options: ["dmode=775,fmode=775"]
+
+    # auto update guest additions
+    d.vbguest.auto_update = true
+
+    # vagrant-hostmanager is necessary to update /etc/hosts on hosts and guests
+    d.vm.network "private_network", ip: vagrant_config['dhclient']['ip']
+    d.vm.hostname = vagrant_config['dhclient']['domain']
+
+    # Run Ansible from the Vagrant VM
+    d.vm.provision "ansible_local" do |ansible|
+      ansible.install = true
+      ansible.install_mode = :default
+      ansible.playbook = "ansible_vagrant/dhclient-playbook.yml"
       ansible.galaxy_role_file = "ansible_vagrant/requirements.yml"
       ansible.extra_vars = { ansible_python_interpreter:"/usr/bin/python3" }
     end

@@ -30,17 +30,9 @@
 
   roles:
   - andrelohmann.root_colored_prompt
-  - andrelohmann.docker
   - default_tasks
   - andrelohmann.beats
   - beats_patch
-  - unbound_build
-  - unbound_tasks
-  - unbound_tests
-  - unbound_exporter
-  - nginx
-  - nginx_tests
-  - chrony_server
-
+  - chrony_client
 
 ...

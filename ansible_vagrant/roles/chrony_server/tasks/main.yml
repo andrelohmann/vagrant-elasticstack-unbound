@@ -1,0 +1,75 @@
+---
+
+- name: install chrony
+  apt:
+    name: "{{ packages }}"
+    state: latest
+    dpkg_options: 'force-confnew,force-confdef'
+    autoclean: yes
+    autoremove: yes
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+    - chrony
+
+# touch log file
+- name: Create a log file
+  file:
+    path: /var/log/chrony-current-upstream.log
+    state: touch
+    owner: _chrony
+    group: _chrony
+    mode: '0644'
+
+- name: configure chrony (chrony.conf)
+  copy:
+    dest: /etc/chrony/chrony.conf
+    src: chrony.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: configure unbound logrotate
+  copy:
+    dest: /etc/logrotate.d/chrony-current-upstream
+    content: |
+      /var/log/chrony-current-upstream.log {
+        daily
+        rotate 3
+        maxsize 1G
+        missingok
+        notifempty
+        compress
+        sharedscripts
+        create 644 _chrony _chrony
+      }
+
+- name: add chrony-upstream-log.sh
+  copy:
+    dest: /usr/local/sbin/chrony-upstream-log.sh
+    src: chrony-upstream-log.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: create the logging cronjob
+  cron:
+    name: "chrony upstream log"
+    job: "/usr/local/sbin/chrony-upstream-log.sh"
+
+- name: just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+
+- name: enable chrony
+  systemd:
+    name: chrony
+    enabled: yes
+
+- name: restart chrony
+  systemd:
+    name: chrony
+    state: restarted
+
+...

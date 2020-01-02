@@ -1,0 +1,44 @@
+---
+
+- name: install chrony
+  apt:
+    name: "{{ packages }}"
+    state: latest
+    dpkg_options: 'force-confnew,force-confdef'
+    autoclean: yes
+    autoremove: yes
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+    - chrony
+
+- name: disable all server and pool configs in chrony.conf
+  lineinfile:
+    path: /etc/chrony/chrony.conf
+    regexp: "^server "
+    line: "# server"
+
+- name: disable all server and pool configs in chrony.conf
+  lineinfile:
+    path: /etc/chrony/chrony.conf
+    regexp: "^pool "
+    line: "# pool"
+
+- name: copy chrony helper
+  copy:
+    dest: /usr/lib/chrony-helper
+    src: chrony-helper
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: copy chrony exit hook
+  copy:
+    dest: /etc/dhcp/dhclient-exit-hooks.d/chrony
+    src: chrony
+    owner: root
+    group: root
+    mode: '0644'
+
+...

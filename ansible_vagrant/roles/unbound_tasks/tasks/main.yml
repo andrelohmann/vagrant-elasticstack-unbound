@@ -15,7 +15,14 @@
     - libprotobuf-c1
     - xz-utils
 
-# dpkg -i libunbound8_1.9.4-al1_amd64.deb unbound-anchor_1.9.4-al1_amd64.deb unbound_1.9.4-al1_amd64.deb
+# as of unbound is listening on 0.0.0.0, we need to disable systemd-resolved
+- name: stop systemd-resolved
+  systemd:
+    name: "systemd-resolved"
+    state: stopped
+    enabled: no
+
+# dpkg -i libunbound8_1.9.6-al1_amd64.deb unbound-anchor_1.9.6-al1_amd64.deb unbound_1.9.6-al1_amd64.deb
 - name: install the compiled unbound packages
   apt:
     deb: "{{ item }}"
@@ -26,9 +33,9 @@
     update_cache: yes
     cache_valid_time: 3600
   with_items:
-  - /root/unbound_package/libunbound8_1.9.4-al1_amd64.deb
-  - /root/unbound_package/unbound-anchor_1.9.4-al1_amd64.deb
-  - /root/unbound_package/unbound_1.9.4-al1_amd64.deb
+  - /root/unbound_package/libunbound8_1.9.6-al1_amd64.deb
+  - /root/unbound_package/unbound-anchor_1.9.6-al1_amd64.deb
+  - /root/unbound_package/unbound_1.9.6-al1_amd64.deb
 
 # touch log file
 - name: Create an insecure log file
